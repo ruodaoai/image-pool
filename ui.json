@@ -1,0 +1,27 @@
+{
+  "route": "image-pool",
+  "label": "生图号池",
+  "description": "AI 号池插件：VirtualBrowser API + FPBrowser2API 一键装好，粘贴账号即可生图与对话（gpt-6-astra 等），自带调用日志、图片库与消耗/额度统计，本地台账记录每次调用。",
+  "icon": "Image",
+  "version": "1.2.0",
+  "author": "Ruodao",
+  "capabilities": ["commands", "code.execute", "image-generate", "chat-completion", "account-pool", "usage-report", "call-logs", "image-library"],
+  "configFields": [
+    { "key": "RUODAO_IMAGE_MODEL", "label": "默认生图模型（留空 = gpt-image2-1k）", "placeholder": "gpt-image2-1k", "secret": false },
+    { "key": "RUODAO_CHAT_MODEL", "label": "默认对话模型（留空 = gpt-6-astra）", "placeholder": "gpt-6-astra", "secret": false },
+    { "key": "RUODAO_POOL_CONCURRENCY", "label": "多账号并发数（默认 3）", "placeholder": "3", "secret": false },
+    { "key": "RUODAO_WARM_IDLE_MIN", "label": "热窗口空闲回收分钟数（默认 15）", "placeholder": "15", "secret": false },
+    { "key": "RUODAO_POOL_SETUP_PATH", "label": "二合一安装包本地路径（留空 = 自动查找）", "placeholder": "D:\\Downloads\\Ruodao-ImagePool-AllInOne-Setup.exe", "secret": false },
+    { "key": "RUODAO_POOL_SETUP_URL", "label": "二合一安装包下载地址（已内置离线包时留空）", "placeholder": "https://...", "secret": false },
+    { "key": "RUODAO_FB_API_BASE", "label": "FPBrowser2API 网关地址（留空 = 自动拉起）", "placeholder": "http://127.0.0.1:8002", "secret": false },
+    { "key": "RUODAO_FB_HOME", "label": "FPBrowser2API 目录（留空 = 二合一包安装目录）", "placeholder": "C:\\ProgramData\\RuodaoImagePool\\fpbrowser2api", "secret": false },
+    { "key": "RUODAO_VB_API_BASE", "label": "VirtualBrowser API 地址（留空自动发现）", "placeholder": "http://127.0.0.1:9000", "secret": false },
+    { "key": "RUODAO_VB_EXE", "label": "VirtualBrowser 主程序路径（留空 = 自动探测）", "placeholder": "C:\\Program Files\\VirtualBrowser\\VirtualBrowser.exe", "secret": false },
+    { "key": "RUODAO_VB_WORKER_IDS", "label": "手动指定窗口环境编号（逗号分隔；留空自动探测）", "placeholder": "1,2,3", "secret": false },
+    { "key": "RUODAO_VB_PROXY", "label": "指纹窗口代理（留空自动探测；填 off 强制直连）", "placeholder": "http://127.0.0.1:7890", "secret": false },
+    { "key": "RUODAO_ASSISTANT_PORT", "label": "搭建助手端口", "placeholder": "8765", "secret": false },
+    { "key": "RUODAO_FB_PORT", "label": "内嵌 FPBrowser2API 端口", "placeholder": "8002", "secret": false },
+    { "key": "RUODAO_IMAGE_TIMEOUT", "label": "生图任务轮询超时（秒）", "placeholder": "600", "secret": false },
+    { "key": "RUODAO_IMAGE_API_PORT", "label": "本地 Agent API 端口（图片 + 对话）", "placeholder": "8100", "secret": false }
+  ]
+}

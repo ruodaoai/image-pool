@@ -1,0 +1,10 @@
+{
+  "name": "image-pool",
+  "displayName": "生图号池（FPBrowser2API + VirtualBrowser）",
+  "version": "1.2.1",
+  "description": "AI 号池插件：VirtualBrowser API + FPBrowser2API 一键装好并自动配置（免 Git/Python/API Key），粘贴账号一键入池，支持生图、额度统计、调用日志与图片库；守护进程复用热窗口加速。",
+  "author": {
+    "name": "Ruodao"
+  },
+  "ui": "./ui.json"
+}

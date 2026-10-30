@@ -1,0 +1,287 @@
+{
+  "id": "com.ruodao.image-pool",
+  "name": "生图号池（FPBrowser2API + VirtualBrowser）",
+  "version": "1.2.1",
+  "apiVersion": ">=0.1.0 <0.2.0",
+  "description": "AI 号池生图插件：自带 VirtualBrowser API 版 + FPBrowser2API 二合一安装包，一键装好并自动配置，粘贴账号发货文本一键入池，生图任务自动取图，本地台账记录每次消耗。",
+  "requires": {
+    "capabilities": {
+      "required": {
+        "commands": "0.1.0",
+        "code.execute": "0.1.0"
+      }
+    }
+  },
+  "permissions": [
+    "network",
+    "process"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "id": "com.ruodao.image-pool.setup",
+        "title": "一键安装（二合一包）",
+        "description": "全自动搭建号池：自动定位二合一安装包（VirtualBrowser API + FPBrowser2API，内置或 Downloads）→ 静默安装 → 生成随机密钥写入配置（自动备份）→ 启动两端服务 → 挂载通信扩展 → 自动完成项目/服务器/空间/gpt_workflow/窗口绑定。免 Git、免 Python、免 API Key；已安装时自动跳过，可重复执行。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "setup"],
+          "cwd": ".",
+          "timeoutMs": 600000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.repair",
+        "title": "一键修复（直驱组件补装）",
+        "description": "自检发现直驱模式红叉时使用：自动诊断缺失组件（内置 playwright-core / VirtualBrowser 内核），从 npmmirror 镜像补装 playwright-core 并验证加载。后台任务执行，进度实时可见（诊断 → 补装 → 验证），关闭界面后继续。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "repair"],
+          "cwd": ".",
+          "timeoutMs": 60000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.repair-status",
+        "title": "查询修复进度",
+        "description": "轮询一键修复后台任务的实时进度（诊断 / 补装 / 验证三步骤、逐条日志、失败原因）。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "repair-status"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.cleanup",
+        "title": "修复占用（清理残留进程）",
+        "description": "插件更新/重装报 EBUSY 时使用：停止网关 → 结束旧版遗留在插件目录内运行的 python/安装器进程 → 删除插件目录内的旧运行时数据。账号与登录态在应用数据目录，不受影响。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "cleanup"],
+          "cwd": ".",
+          "timeoutMs": 120000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.setup-status",
+        "title": "查询安装进度",
+        "description": "轮询一键安装后台任务的实时进度：步骤清单（环境检查/二合一安装/写配置/启动网关/启动 VirtualBrowser API/挂载扩展/服务检查/后台配置）、逐条日志、成功或失败原因。状态文件持久化，关闭界面后安装继续。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "setup-status"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.provision",
+        "title": "号池后台自动配置（provision）",
+        "description": "一条命令完成 FPBrowser2API 后台全部配置：自动登录后台（自动同步/重置弱密钥）→ 建项目/浏览器服务器(vendor=virtualbrowser)/空间 → 挂载通信扩展 → 同步窗口 → 创建并绑定 gpt_workflow 任务类型。免 API Key，幂等可重复执行。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "provision"],
+          "cwd": ".",
+          "timeoutMs": 180000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.service",
+        "title": "服务维护（启停 / 重启 / 状态）",
+        "description": "维护两端服务：stdin 传 { action: \"start\"|\"stop\"|\"restart\"|\"status\", target: \"fpb\"|\"vb\"|\"both\" }（默认 status/both）。FPBrowser2API 走其自带服务脚本，VirtualBrowser 启动/关闭主程序。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "service"],
+          "cwd": ".",
+          "timeoutMs": 90000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.assistant",
+        "title": "打开搭建助手（图形化维护台）",
+        "description": "启动插件内置的 FPBrowser 搭建助手控制台（http://127.0.0.1:8765）：环境检测、安装、密钥生成与配置、VirtualBrowser API 测试、服务控制、任务提交与状态查询，浏览器自动打开。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "assistant"],
+          "cwd": ".",
+          "timeoutMs": 60000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.doctor",
+        "title": "环境自检（号池两端服务连通性）",
+        "description": "检查 FPBrowser2API（默认 :8002）与自带 VirtualBrowser API（默认 :9000）是否可达，未就绪时自动拉起服务，不产生费用。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "doctor"],
+          "cwd": ".",
+          "timeoutMs": 60000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.models",
+        "title": "模型列表",
+        "description": "获取号池支持的模型列表：网关在线时读取 /v1/models，未启动时回退内置清单（gpt-image2 系列、nana-banana、veo 等）。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "models"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.agent-access",
+        "title": "接入 Agent（本地 OpenAI 兼容图片 + 对话 API）",
+        "description": "启动本地直驱号池 API（默认 127.0.0.1:8100），返回 OpenAI 兼容 base URL、Bearer Key、图片/对话模型列表与 curl 示例；供 Agent/脚本通过 /v1/images/generations 出图、/v1/chat/completions 对话（支持 SSE 流式）。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "agent-access"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.generate",
+        "title": "生成图片",
+        "description": "号池有已登录账号时走直驱模式（内嵌 Playwright 直连 VirtualBrowser，免网关），失败自动换下一个账号；全部失败直接返回原因与截图，不再回退到没有 worker 的网关白等。stdin 传 { prompt, model?, resolution?, aspect_ratio?, n?, images? }。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "generate"],
+          "cwd": ".",
+          "timeoutMs": 660000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.stealth",
+        "title": "风控伪装自检",
+        "description": "用号池 worker 打开 bot.sannysoft.com 反机器人检测页：验证 navigator.webdriver 已抹平、指纹伪装生效，输出逐项指标与全页截图。stdin 可传 { workerId? }。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "stealth"],
+          "cwd": ".",
+          "timeoutMs": 120000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.bind",
+        "title": "账号自动登录（一键入池保活）",
+        "description": "把发货文本（每行 邮箱----密码----2FA密钥）粘贴传入：为每个账号自动创建独立指纹窗口，打开 chatgpt.com 自动填表登录，2FA 动态码自动计算填入，登录态永久保活。stdin 传 { text }。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "bind"],
+          "cwd": ".",
+          "timeoutMs": 600000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.workers",
+        "title": "号池状态（worker 列表）",
+        "description": "查看号池 worker 指纹窗口：总数、已登录数、各自生图消耗，直驱组件就绪状态。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "workers"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.task",
+        "title": "查询生图任务",
+        "description": "按 taskId 查询任务状态与结果：stdin 传 { taskId }。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "task"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.usage",
+        "title": "消耗统计",
+        "description": "本地台账汇总：按类型（生图/对话）、模型、账号统计调用量、成功/失败、成功率、平均耗时与各阶段耗时；同时给出今日额度概览（每个账号今日调用量 + 上游限流标记，24 小时内不再调度被限流账号）。stdin 可传 { days? }（默认 30 天）。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "usage"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.logs",
+        "title": "调用日志",
+        "description": "查询本地台账的逐条调用记录（生图 + 对话）：时间、类型、状态、账号、模型、耗时、排队、阶段耗时、提示词与错误原因。stdin 可传 { days?, limit?, offset?, kind?: \"image\"|\"chat\", state?: \"completed\"|\"failed\", workerId?, q? }。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "logs"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.images",
+        "title": "图片库（生成图片）",
+        "description": "本地生成图片库：list 列出全部图片（文件、大小、提示词、模型、账号、时间与可直接预览的本地 URL）；delete 删除指定文件；reveal 在文件管理器中定位。stdin 传 { action: \"list\"|\"delete\"|\"reveal\", file?, limit? }。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "images"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.daemon",
+        "title": "加速守护进程（启停 / 状态）",
+        "description": "号池守护进程管理：start 启动（可带 warm 数量立即预热窗口）/ stop 停止（关闭常驻浏览器）/ restart 重启 / status 查看运行状态、并发数、热窗口、排队。守护进程复用已登录窗口并支持多账号并发，是生图/对话加速的核心。stdin 传 { action }。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "daemon"],
+          "cwd": ".",
+          "timeoutMs": 300000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.warmup",
+        "title": "预热窗口（提速）",
+        "description": "提前启动指定数量的已登录指纹窗口并打开 ChatGPT，让后续生图/对话直接复用，省掉每次 10~30 秒冷启动。stdin 可传 { count? }（默认全部已登录账号）。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "warmup"],
+          "cwd": ".",
+          "timeoutMs": 300000
+        }
+      },
+      {
+        "id": "com.ruodao.image-pool.accounts",
+        "title": "号池账号（导入 / 查看）",
+        "description": "import：把购买平台的发货文本原文（每行 邮箱----密码----2FA密钥）粘贴传入，自动解析去重落盘，密码脱敏展示；list：查看已导入账号与各自消耗。stdin 传 { action: \"import\"|\"list\", text? }。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/image-pool.mjs", "accounts"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      }
+    ]
+  }
+}
